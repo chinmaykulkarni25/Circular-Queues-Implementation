@@ -1,0 +1,102 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX 5  // Define the maximum size of the queue
+
+typedef struct {
+    int items[MAX];
+    int front, rear;
+} CircularQueue;
+
+// Function prototypes
+void enqueue(CircularQueue *q, int value);
+int dequeue(CircularQueue *q);
+void printQueue(CircularQueue *q);
+
+int main() {
+    CircularQueue q;
+    q.front = -1;
+    q.rear = -1;
+
+    int choice, value;
+
+    while (1) {
+        printf("\nCircular Queue Operations:");
+        printf("\n1. Add (Enqueue)");
+        printf("\n2. Delete (Dequeue)");
+        printf("\n3. Print");
+        printf("\n4. Exit");
+        printf("\nEnter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter value to enqueue: ");
+                scanf("%d", &value);
+                enqueue(&q, value);
+                break;
+            case 2:
+                value = dequeue(&q);
+                if (value != -1)
+                    printf("Dequeued value: %d\n", value);
+                break;
+            case 3:
+                printQueue(&q);
+                break;
+            case 4:
+                printf("Exiting program.\n");
+                exit(0);
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
+    }
+
+    return 0;
+}
+
+void enqueue(CircularQueue *q, int value) {
+    if ((q->rear + 1) % MAX == q->front) {
+        printf("Queue is full! Cannot enqueue.\n");
+        return;
+    }
+    if (q->front == -1)  // If queue is empty
+        q->front = 0;
+
+    q->rear = (q->rear + 1) % MAX;
+    q->items[q->rear] = value;
+    printf("Enqueued %d\n", value);
+}
+
+int dequeue(CircularQueue *q) {
+    if (q->front == -1) {
+        printf("Queue is empty! Cannot dequeue.\n");
+        return -1;
+    }
+
+    int value = q->items[q->front];
+    if (q->front == q->rear) {
+        // Queue becomes empty
+        q->front = q->rear = -1;
+    } else {
+        q->front = (q->front + 1) % MAX;
+    }
+
+    return value;
+}
+
+void printQueue(CircularQueue *q) {
+    if (q->front == -1) {
+        printf("Queue is empty!\n");
+        return;
+    }
+
+    printf("Circular Queue elements: ");
+    int i = q->front;
+    while (1) {
+        printf("%d ", q->items[i]);
+        if (i == q->rear)
+            break;
+        i = (i + 1) % MAX;
+    }
+    printf("\n");
+}
+Output : 
